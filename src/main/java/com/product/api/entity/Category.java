@@ -1,5 +1,7 @@
 package com.product.api.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,15 +19,19 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("category_id")
     @Column(name = "category_id")
     private Integer categoryId;
 
+    @JsonProperty("category")
     @Column(name = "category", nullable = false, unique = true)
     private String category;
 
+    @JsonProperty("tag")
     @Column(name = "tag", nullable = false, unique = true)
     private String tag;
 
+    @JsonProperty("status")
     @Column(name = "status", nullable = false)
     private Integer status;
 

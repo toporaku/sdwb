@@ -1,18 +1,19 @@
-# Práctica 4 - Exception Handling
+# Práctica - CRUD Web y Validaciones
 
 **Nombre:** Toporek Coca Eric
 **Num de Cuenta:** 314284987
 
 Este es un proyecto backend desarrollado en **Java usando Spring Boot**, el cual permite la administración de una entidad llamada `Categoría` de forma RESTful sobre una base de datos MySQL. Cuenta con capacidades de realizar un "soft-delete" de categorías y consultar listados activos e inactivos.
 
-## � Changelog (Manejo de Excepciones - `p4_exception`)
+## 🆕 Changelog de la última versión
 
-Los principales cambios y características añadidas en esta versión (comparada con `p3_jpa`) son los siguientes:
+Los principales cambios y características añadidas a la aplicación son:
 
-- **Estructura Global de Errores**: Se creó el componente `RestExceptionHandler` (usando `@ControllerAdvice`) para interceptar y manejar las excepciones arrojadas por la aplicación a un nivel global, regresando un JSON estandarizado al cliente.
-- **Objeto de Respuesta**: Se agregó la clase `ExceptionResponse` para estructurar la salida de los errores HTTP, conteniendo la fecha/hora exacta (`timestamp`), el código HTTP (`status`), el nombre del error (`error`), el mensaje detallado (`message`) y el `path` donde ocurrió el fallo.
-- **Excepciones Personalizadas**: Creación de la clase `ApiException` (que hereda de `RuntimeException`) permitiéndonos disparar errores en la capa de servicios indicando explícitamente el código de estatus HTTP a devolver.
-- **Adaptación en Servicios y Controladores**: Todo el flujo (`CtrlCategory`, `SvcCategory` y `SvcCategoryImp`) fue modificado para devolver objetos genéricos de modelo (`ResponseEntity<List<Category>>`), además de blindarse mediante la envoltura de consultas en bloques de `try/catch` para capturar explícitamente problemas con la base de datos (p.ej. `DataAccessException`).
+- **Operaciones CRUD Completas:** Adición de rutas REST en `CtrlCategory` para listar categorías activas (`GET /category/active`), crear (`POST /category`), actualizar (`PUT /category/{id}`), y cambiar de estado o *soft-delete* (`PATCH /category/{id}/enable` y `disable`).
+- **Consultas Personalizadas JPA:** Creación de operaciones DML avanzadas mediante `@Query(nativeQuery = true)`, `@Modifying`, y `@Transactional` dentro de `RepoCategory` para un control exhaustivo sobre la base de datos.
+- **Aislamiento de Lógica y DTOs:** Centralización de las transacciones hacia la base en `SvcCategoryImp`, que ahora procesa los envoltorios de entrada de usuario (`DtoCategroryIn`). 
+- **Validaciones Spring Boot:** Se implementó `jakarta.validation` agregando la dependencia correspondiente a `pom.xml`, habilitando aserciones de consistencia en el API (p.ej. `@NotNull`).
+- **Manejo Extensible de Excepciones (`DBAccessException` y HTTP 409):** Interceptamos activamente errores de restricción de unicidad de base de datos (`ux_category`, `ux_tag`) desde la extracción de la `DataAccessException`, devolviéndolo orgánicamente al usuario como conflictos `HttpStatus.CONFLICT`.
 
 ## �🚀 Requisitos Previos
 
