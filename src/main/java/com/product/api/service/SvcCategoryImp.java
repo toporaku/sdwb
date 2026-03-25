@@ -43,7 +43,7 @@ public class SvcCategoryImp implements SvcCategory {
     @Override
     public void create(DtoCategroryIn in) {
         try {
-            repoCategory.create(in.getCategory(), in.getTag(), in.getStatus());
+            repoCategory.create(in.getCategory(), in.getTag());
         } catch (DataAccessException e) {
             if (e.getLocalizedMessage().contains("ux_category"))
                 throw new ApiException(HttpStatus.CONFLICT, "La categoría ya existe");

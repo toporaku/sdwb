@@ -37,15 +37,15 @@ public class CtrlCategory {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody DtoCategroryIn in) {
+    public ResponseEntity<String> create(@RequestBody DtoCategroryIn in) {
         svcCategory.create(in);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("Categoría creada.");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@RequestBody DtoCategroryIn in, @PathVariable Integer id) {
+    public ResponseEntity<String> update(@RequestBody DtoCategroryIn in, @PathVariable Integer id) {
         svcCategory.update(in, id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("Categoría actualizada.");
     }
 
     @PatchMapping("/{id}/enable")
