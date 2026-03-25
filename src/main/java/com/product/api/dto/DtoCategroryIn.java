@@ -37,7 +37,6 @@ public class DtoCategroryIn {
         return "DtoCategroryIn {"
                 + "category='" + category + '\''
                 + ", tag='" + tag + '\''
-                + ", status=" + status
                 + '}';
     }
 }
