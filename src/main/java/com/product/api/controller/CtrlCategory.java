@@ -55,8 +55,8 @@ public class CtrlCategory {
     }
 
     @PatchMapping("/{id}/disable")
-    public ResponseEntity<Void> disable(@PathVariable Integer id) {
+    public ResponseEntity<String> disable(@PathVariable Integer id) {
         svcCategory.disable(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Categoría desactivada.");
     }
 }
