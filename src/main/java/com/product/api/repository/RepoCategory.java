@@ -32,7 +32,7 @@ public interface RepoCategory extends JpaRepository<Category, Integer> {
     @Modifying
     @Transactional
     @Query(value = "UPDATE category SET category = :category, tag = :tag, status = :status WHERE category_id = :id", nativeQuery = true)
-    void update(@Param("category") String category, @Param("tag") String tag, @Param("status") Integer status,
+    void update(@Param("category") String category, @Param("tag") String tag,
             @Param("id") Integer id);
 
     @Modifying
