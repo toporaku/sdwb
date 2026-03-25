@@ -4,10 +4,12 @@ import com.product.api.entity.Category;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 /**
  * Interfaz de servicio para operaciones de categoría.
  */
 public interface SvcCategory {
 
-    List<Category> getCategories();
+    ResponseEntity<List<Category>> getCategories();
 }

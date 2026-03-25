@@ -1,11 +1,20 @@
-# Práctica 3 - JPA
+# Práctica 4 - Exception Handling
 
 **Nombre:** Toporek Coca Eric
 **Num de Cuenta:** 314284987
 
 Este es un proyecto backend desarrollado en **Java usando Spring Boot**, el cual permite la administración de una entidad llamada `Categoría` de forma RESTful sobre una base de datos MySQL. Cuenta con capacidades de realizar un "soft-delete" de categorías y consultar listados activos e inactivos.
 
-## 🚀 Requisitos Previos
+## � Changelog (Manejo de Excepciones - `p4_exception`)
+
+Los principales cambios y características añadidas en esta versión (comparada con `p3_jpa`) son los siguientes:
+
+- **Estructura Global de Errores**: Se creó el componente `RestExceptionHandler` (usando `@ControllerAdvice`) para interceptar y manejar las excepciones arrojadas por la aplicación a un nivel global, regresando un JSON estandarizado al cliente.
+- **Objeto de Respuesta**: Se agregó la clase `ExceptionResponse` para estructurar la salida de los errores HTTP, conteniendo la fecha/hora exacta (`timestamp`), el código HTTP (`status`), el nombre del error (`error`), el mensaje detallado (`message`) y el `path` donde ocurrió el fallo.
+- **Excepciones Personalizadas**: Creación de la clase `ApiException` (que hereda de `RuntimeException`) permitiéndonos disparar errores en la capa de servicios indicando explícitamente el código de estatus HTTP a devolver.
+- **Adaptación en Servicios y Controladores**: Todo el flujo (`CtrlCategory`, `SvcCategory` y `SvcCategoryImp`) fue modificado para devolver objetos genéricos de modelo (`ResponseEntity<List<Category>>`), además de blindarse mediante la envoltura de consultas en bloques de `try/catch` para capturar explícitamente problemas con la base de datos (p.ej. `DataAccessException`).
+
+## �🚀 Requisitos Previos
 
 Para ejecutar la aplicación localmente vas a necesitar:
 - **Java 17 o superior** (configurado en el PATH o a través de SDKMAN).
