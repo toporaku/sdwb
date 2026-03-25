@@ -1,15 +1,24 @@
 package com.product.api.service;
 
+import com.product.api.dto.DtoCategroryIn;
 import com.product.api.entity.Category;
 
 import java.util.List;
-
-import org.springframework.http.ResponseEntity;
 
 /**
  * Interfaz de servicio para operaciones de categoría.
  */
 public interface SvcCategory {
 
-    ResponseEntity<List<Category>> getCategories();
+    public List<Category> findAll();
+
+    public List<Category> findActive();
+
+    public void create(DtoCategroryIn in);
+
+    public void update(DtoCategroryIn in, Integer id);
+
+    public void enable(Integer id);
+
+    public void disable(Integer id);
 }
