@@ -14,8 +14,6 @@ public class DtoCategroryIn {
     @NotNull(message = "Tag is required")
     private String tag;
 
-    @JsonProperty("status")
-    private Integer status;
 
     public String getCategory() {
         return category;
