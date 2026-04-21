@@ -1,4 +1,4 @@
-package com.product.api.dto;
+package com.product.api.dto.in;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,7 +13,6 @@ public class DtoCategroryIn {
     @JsonProperty("tag")
     @NotNull(message = "Tag is required")
     private String tag;
-
 
     public String getCategory() {
         return category;
@@ -30,7 +29,6 @@ public class DtoCategroryIn {
     public void setTag(String tag) {
         this.tag = tag;
     }
-
 
     @Override
     public String toString() {

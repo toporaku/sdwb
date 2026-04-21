@@ -1,6 +1,6 @@
 package com.product.api.service;
 
-import com.product.api.dto.DtoCategroryIn;
+import com.product.api.dto.in.DtoCategroryIn;
 import com.product.api.entity.Category;
 import com.product.api.repository.RepoCategory;
 import com.product.exception.ApiException;
