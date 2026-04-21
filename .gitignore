@@ -27,3 +27,6 @@ replay_pid*
 .mvn/
 .vscode/
 target/
+
+# macOS files
+.DS_Store
