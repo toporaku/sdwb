@@ -2,9 +2,10 @@ package com.product.api.controller;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,24 +16,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.product.api.dto.in.DtoProductIn;
-import com.product.api.dto.in.DtoProductImageIn;
-import com.product.api.entity.ProductImage;
 import com.product.api.dto.out.DtoProductListOut;
 import com.product.api.dto.out.DtoProductOut;
 import com.product.api.service.SvcProduct;
-import com.product.api.service.SvcProductImage;
 
-import jakarta.validation.Valid;
-
+@Tag(name = "Product", description = "Gestión de productos")
 @RestController
 @RequestMapping("/product")
 public class CtrlProduct {
 
 	@Autowired
 	SvcProduct svc;
-
-	@Autowired
-	SvcProductImage svcProductImage;
 
 	@GetMapping
 	public ResponseEntity<List<DtoProductListOut>> getProducts() {
@@ -62,21 +56,5 @@ public class CtrlProduct {
 	@PatchMapping("/{id}/disable")
 	public ResponseEntity<String> disableProduct(@PathVariable Integer id) {
 		return svc.disableProduct(id);
-	}
-
-	@GetMapping("/{id}/image")
-	public ResponseEntity<List<ProductImage>> getProductImages(@PathVariable Integer id) {
-		return svcProductImage.getProductImages(id);
-	}
-
-	@PostMapping("/{id}/image")
-	public ResponseEntity<String> createProductImage(@PathVariable Integer id,
-			@Valid @RequestBody DtoProductImageIn in) {
-		return svcProductImage.createProductImage(id, in);
-	}
-
-	@DeleteMapping("/{id}/image/{productImageId}")
-	public ResponseEntity<String> deleteProductImage(@PathVariable Integer id, @PathVariable Integer productImageId) {
-		return svcProductImage.deleteProductImage(id, productImageId);
 	}
 }
