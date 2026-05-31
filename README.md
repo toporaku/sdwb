@@ -7,13 +7,15 @@ Este es un proyecto backend desarrollado en **Java usando Spring Boot**, el cual
 
 ## 🆕 Changelog de la última versión
 
-Los principales cambios y características añadidas a la aplicación son:
+Los principales cambios y características añadidas a la aplicación en sus últimas entregas son:
 
-- **Operaciones CRUD Completas:** Adición de rutas REST en `CtrlCategory` para listar categorías activas (`GET /category/active`), crear (`POST /category`), actualizar (`PUT /category/{id}`), y cambiar de estado o *soft-delete* (`PATCH /category/{id}/enable` y `disable`).
-- **Consultas Personalizadas JPA:** Creación de operaciones DML avanzadas mediante `@Query(nativeQuery = true)`, `@Modifying`, y `@Transactional` dentro de `RepoCategory` para un control exhaustivo sobre la base de datos.
-- **Aislamiento de Lógica y DTOs:** Centralización de las transacciones hacia la base en `SvcCategoryImp`, que ahora procesa los envoltorios de entrada de usuario (`DtoCategroryIn`). 
-- **Validaciones Spring Boot:** Se implementó `jakarta.validation` agregando la dependencia correspondiente a `pom.xml`, habilitando aserciones de consistencia en el API (p.ej. `@NotNull`).
-- **Manejo Extensible de Excepciones (`DBAccessException` y HTTP 409):** Interceptamos activamente errores de restricción de unicidad de base de datos (`ux_category`, `ux_tag`) desde la extracción de la `DataAccessException`, devolviéndolo orgánicamente al usuario como conflictos `HttpStatus.CONFLICT`.
+- **Gestión de Productos (Product API):** Creación de la entidad `Product` y exposición de su CRUD estructurado mediante las DTOs de entrada y salida a través de `CtrlProduct`.
+- **Administración de Imágenes de Producto en Base64:** Implementación de persistencia de archivos en un volumen del sistema de archivos interceptando codificaciones string dentro de `SvcProductImageImp`. Soporta guardado dinámico de UUID, inyección de directorios, consultas en base de datos (`product_image`) e incluye verificaciones estrictas de pertenencia de imagen y producto.
+- **Manejo Avanzado de Excepciones SQL de Producto:** El sistema es totalmente tolerante a problemas de integridad arrojando al API limpiamente (HTTP 409 y HTTP 404) los fallos al violarse `ux_product_gtin`, `ux_product_product` y `fk_product_category`.
+- **Esquema de Base de Datos Unificado:** Las instrucciones de instanciación del ambiente MySQL (`create_database.sql`) fueron enriquecidas compactando relacionalmente las nuevas tablas pertinentes (`product`, `product_image`).
+- **Seguridad y JWT (Spring Security):** Implementación integral de un protocolo `Stateless` de validación. Se creó el filtro de intercepción lógica `JwtAuthFilter` para decodificar arreglos de roles dinámicos, aislando la estructura a través un secred compartido (Symmetric validation) que previene el acceso no autorizado a través del `SecurityConfig`.
+- **CRUD de Categorías (Previo):** Rutas asiladas para operaciones con Soft-Delete.
+- **Validaciones Integradas:** Uso continuado de `@Valid` y `jakarta.validation` para depurar entradas del usuario desde la capa del mapeador.
 
 ## �🚀 Requisitos Previos
 
@@ -64,4 +66,28 @@ java -jar target/product-0.0.1-SNAPSHOT.jar
 
 ## 🌐 Uso de la API
 * La aplicación por defecto correrá en el puerto `8080`.
-* Actualmente expone el Path REST asociado a las categorías: `http://localhost:8080/category`.
+* Actualmente expone los siguientes Paths REST principales: 
+  * Configuración de Categorías: `http://localhost:8080/category`
+  * Administración de Productos: `http://localhost:8080/product`
+  * Control de Imágenes anidadas: Ej. `http://localhost:8080/product/{id}/image`
+
+## 🔒 Autenticación y Pruebas (JWT)
+
+A partir de las versiones recientes, el acceso a la base de datos se encuentra restringido al uso de validación Bearer nativo a través de **Spring Security**. 
+
+Para inyectar llamadas HTTP lícitas hacia esta API, es preciso seguir este flujo de verificación:
+
+1. **Obtener el Token desde Autorización:** Efectúa una petición válida al enrutador `POST /login` de tu servicio adjunto (`auth-service` en modo local apuntando normalmente a `:8082`), y captura la respuesta cifrada que simula la cadena JSON del token.
+2. **Configuración de Cabecera:** Anexa la firma obtenida al protocolo `Authorization` dentro de tus headers cliente.
+
+### Ejemplo de Prueba via cURL
+
+```bash
+curl -X GET http://localhost:8080/category/active \
+     -H "Authorization: Bearer <INSERTA_TU_TOKEN_JWT_AQUI>" \
+     -i
+```
+
+> [!NOTE] 
+> **Barrera de Permisos Interceptados**
+> Ten en cuenta que si tu Token fue emitido bajo la etiqueta de rol `"CUSTOMER"`, la API delegará tu navegación restringiéndote únicamente a visualizaciones seguras (`GET /category/active`, `GET /product`...); cualquier manipulación superior arrojará un error 403 Forbidden. Modificaciones, subidas de archivos o Soft-Deletes se encuentran atrincherados exclusivamentre para la cabecera del rol `"ADMIN"`.
