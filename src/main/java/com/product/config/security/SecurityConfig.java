@@ -34,6 +34,9 @@ public class SecurityConfig {
                 .requestMatchers("/category/**").hasRole("ADMIN")
                 .requestMatchers("/product/**").hasRole("ADMIN")
                 
+                // Allow Swagger UI and OpenAPI endpoints without authentication
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                
                 // Any other request must be fully authenticated
                 .anyRequest().authenticated()
             )

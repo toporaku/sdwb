@@ -3,6 +3,7 @@ package com.product.api.controller;
 import com.product.api.dto.in.DtoCategroryIn;
 import com.product.api.entity.Category;
 import com.product.api.service.SvcCategory;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import java.util.List;
 /**
  * Controlador REST para el recurso de categoría.
  */
+@Tag(name = "Category", description = "Catálogo de categorías de productos")
 @RestController
 @RequestMapping("/category")
 public class CtrlCategory {

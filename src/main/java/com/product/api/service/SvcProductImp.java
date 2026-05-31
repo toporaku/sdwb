@@ -40,8 +40,9 @@ public class SvcProductImp implements SvcProduct {
 	public ResponseEntity<DtoProductOut> getProduct(Integer id) {
 		try {
 			validateProductId(id);
-			return new ResponseEntity<>(null, HttpStatus.OK);s
-		}catch (DataAccessException e) {
+			Product product = repo.findById(id).get();
+			return new ResponseEntity<>(mapper.fromProduct(product), HttpStatus.OK);
+		} catch (DataAccessException e) {
 			throw new DBAccessException(e);
 		}
 	}
@@ -49,8 +50,14 @@ public class SvcProductImp implements SvcProduct {
 	@Override
 	public ResponseEntity<String> createProduct(DtoProductIn in) {
 		try {
-			Product product = mapper.fromDto(in);
-			repo.save(product);
+			repo.create(
+				in.getGtin(),
+				in.getProduct(),
+				in.getDescription(),
+				in.getPrice(),
+				in.getStock(),
+				in.getCategory_id()
+			);
 			return new ResponseEntity<>("El producto ha sido registrado", HttpStatus.CREATED);
 		} catch (DataAccessException e) {
 			if (e.getLocalizedMessage().contains("ux_product_gtin"))
@@ -68,8 +75,17 @@ public class SvcProductImp implements SvcProduct {
 	public ResponseEntity<String> updateProduct(Integer id, DtoProductIn in) {
 		try {
 			validateProductId(id);
-			Product product = mapper.fromDto(id, in);
-			repo.save(product);
+			Product current = repo.findById(id).get();
+			repo.update(
+				in.getGtin(),
+				in.getProduct(),
+				in.getDescription(),
+				in.getPrice(),
+				in.getStock(),
+				in.getCategory_id(),
+				current.getStatus(),
+				id
+			);
 			return new ResponseEntity<>("El producto ha sido actualizado", HttpStatus.OK);
 		} catch (DataAccessException e) {
 			if (e.getLocalizedMessage().contains("ux_product_gtin"))
@@ -87,9 +103,7 @@ public class SvcProductImp implements SvcProduct {
 	public ResponseEntity<String> enableProduct(Integer id) {
 		try {
 			validateProductId(id);
-			Product product = repo.findById(id).get();
-			product.setStatus(1);
-			repo.save(product);
+			repo.enable(id);
 			return new ResponseEntity<>("El producto ha sido activado", HttpStatus.OK);
 		} catch (DataAccessException e) {
 			throw new DBAccessException(e);
@@ -100,9 +114,7 @@ public class SvcProductImp implements SvcProduct {
 	public ResponseEntity<String> disableProduct(Integer id) {
 		try {
 			validateProductId(id);
-			Product product = repo.findById(id).get();
-			product.setStatus(0);
-			repo.save(product);
+			repo.disable(id);
 			return new ResponseEntity<>("El producto ha sido desactivado", HttpStatus.OK);
 		} catch (DataAccessException e) {
 			throw new DBAccessException(e);
