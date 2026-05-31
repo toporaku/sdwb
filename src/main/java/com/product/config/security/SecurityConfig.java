@@ -25,6 +25,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 // Customer accessible endpoints
+                .requestMatchers(HttpMethod.GET, "/category").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/category/active").hasAnyRole("CUSTOMER", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/product").hasAnyRole("CUSTOMER", "ADMIN")
                 .requestMatchers(HttpMethod.GET, "/product/*/image").hasAnyRole("CUSTOMER", "ADMIN")
